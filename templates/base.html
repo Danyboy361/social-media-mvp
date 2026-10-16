@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Chirp{% endblock %} · Chirp</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="{{ url_for('index') }}">chirp<span>.</span></a>
+  <nav>
+    {% if user %}
+      <span class="hello">Hi, {{ user.username }}</span>
+      <form method="post" action="{{ url_for('logout') }}"><button class="nav-button" type="submit">Log out</button></form>
+    {% else %}
+      <a href="{{ url_for('login') }}">Log in</a><a class="nav-cta" href="{{ url_for('register') }}">Join Chirp</a>
+    {% endif %}
+  </nav>
+</header>
+<main class="container">
+  {% for category, message in get_flashed_messages(with_categories=true) %}
+    <div class="flash {{ category }}">{{ message }}</div>
+  {% endfor %}
+  {% block content %}{% endblock %}
+</main>
+<footer>Chirp · A lightweight social MVP</footer>
+</body>
+</html>

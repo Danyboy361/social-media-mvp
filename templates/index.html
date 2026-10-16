@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<section class="hero">
+  <p class="eyebrow">A little less noise. A little more signal.</p>
+  <h1>What's happening<br><span>in your world?</span></h1>
+  <p class="subhead">A simple place to share thoughts and catch up with everyone.</p>
+</section>
+{% if user %}
+<section class="composer card">
+  <div class="avatar">{{ user.username[0]|upper }}</div>
+  <form method="post" action="{{ url_for('create_post') }}">
+    <label class="sr-only" for="content">Write a post</label>
+    <textarea id="content" name="content" maxlength="280" placeholder="Share something with the world…" required></textarea>
+    <div class="composer-bottom"><small>Keep it to 280 characters.</small><button type="submit">Publish post ↗</button></div>
+  </form>
+</section>
+{% else %}
+<section class="callout card"><div><h2>Your voice belongs here.</h2><p>Join the conversation by creating a free account.</p></div><a class="button" href="{{ url_for('register') }}">Create account</a></section>
+{% endif %}
+<section class="feed-heading"><div><p class="eyebrow">THE TIMELINE</p><h2>Latest posts</h2></div><span class="count">{{ posts|length }} shown</span></section>
+{% if posts %}
+  <div class="feed">
+  {% for post in posts %}
+    <article class="post card">
+      <div class="avatar small">{{ post.username[0]|upper }}</div>
+      <div class="post-body">
+        <div class="post-meta"><strong>{{ post.username }}</strong><span>·</span><time datetime="{{ post.created_at }}">{{ post.created_at|replace('T', ' ')|replace('+00:00', ' UTC')|truncate(22, True, '') }}</time></div>
+        <p>{{ post.content }}</p>
+      </div>
+    </article>
+  {% endfor %}
+  </div>
+{% else %}
+  <div class="empty card"><div class="empty-icon">✳</div><h3>It's quiet in here.</h3><p>Be the first to share a thought.</p></div>
+{% endif %}
+{% endblock %}
